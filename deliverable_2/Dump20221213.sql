@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.30, for macos12 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.31, for Win64 (x86_64)
 --
--- Host: localhost    Database: erasmusdb
+-- Host: 127.0.0.1    Database: erasmusdb
 -- ------------------------------------------------------
--- Server version	8.0.30
+-- Server version	8.0.31
 
 DROP SCHEMA IF EXISTS `erasmusDB`;
 CREATE SCHEMA `erasmusDB`;
@@ -51,11 +51,11 @@ UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET character_set_client  = utf8mb3 */ ;
+/*!50003 SET character_set_results = utf8mb3 */ ;
+/*!50003 SET collation_connection  = utf8mb3_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `accommodation_BEFORE_INSERT` BEFORE INSERT ON `accommodation` FOR EACH ROW BEGIN
 	IF (NEW.price <= 0) THEN
@@ -64,9 +64,12 @@ DELIMITER ;;
     IF (NEW.listing_id <= 0) THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid data at listing_id';
 	END IF; 
-	IF (NEW.type IN ('Private_Room', 'Shared_Room', 'Private_Apartment', 'Private_Dorm', 'Shared_Dorm')) THEN
+	IF (NEW.type NOT IN ('Private_Room', 'Shared_Room', 'Private_Apartment', 'Private_Dorm', 'Shared_Dorm')) THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid data at type';
 	END IF; 
+    IF (NEW.phone_number NOT LIKE ("00%") )THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid phone number, add country code';
+	END IF;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -76,11 +79,11 @@ DELIMITER ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET character_set_client  = utf8mb3 */ ;
+/*!50003 SET character_set_results = utf8mb3 */ ;
+/*!50003 SET collation_connection  = utf8mb3_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `accommodation_BEFORE_UPDATE` BEFORE UPDATE ON `accommodation` FOR EACH ROW BEGIN
 	IF (NEW.price <= 0) THEN
@@ -89,9 +92,12 @@ DELIMITER ;;
     IF (NEW.listing_id <= 0) THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid data at listing_id';
 	END IF; 
-	IF (NEW.type IN ('Private_Room', 'Shared_Room', 'Private_Apartment', 'Private_Dorm', 'Shared_Dorm')) THEN
+	IF (NEW.type NOT IN ('Private_Room', 'Shared_Room', 'Private_Apartment', 'Private_Dorm', 'Shared_Dorm')) THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid data at type';
 	END IF; 
+    IF (NEW.phone_number NOT LIKE ("00%") )THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid phone number, add country code';
+	END IF;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -135,11 +141,11 @@ UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET character_set_client  = utf8mb3 */ ;
+/*!50003 SET character_set_results = utf8mb3 */ ;
+/*!50003 SET collation_connection  = utf8mb3_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `applications_BEFORE_INSERT` BEFORE INSERT ON `applications` FOR EACH ROW BEGIN
 	IF (NEW.application_no <= 0) THEN
@@ -148,9 +154,18 @@ DELIMITER ;;
 	IF (NEW.students_id <= 0) THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid data at students_id';
 	END IF;
-	IF (NEW.mobility_semester IN ('PWinter', 'Spring')) THEN
+	IF (NEW.mobility_semester NOT IN ('Winter', 'Spring')) THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid data at mobility_semester';
-	END IF; 
+	END IF;
+	IF (NEW.cv NOT LIKE ("%.pdf") )THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid CV file format, insert pdf';
+	END IF;
+    IF (NEW.ToR NOT LIKE ("%.pdf") )THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid ToR file format, insert pdf';
+	END IF;
+    IF (NEW.Motivational_letter NOT LIKE ("%.pdf") )THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid Motivational_letter file format, insert pdf';
+	END IF;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -160,11 +175,11 @@ DELIMITER ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET character_set_client  = utf8mb3 */ ;
+/*!50003 SET character_set_results = utf8mb3 */ ;
+/*!50003 SET collation_connection  = utf8mb3_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `applications_BEFORE_UPDATE` BEFORE UPDATE ON `applications` FOR EACH ROW BEGIN
 	IF (NEW.application_no <= 0) THEN
@@ -173,9 +188,18 @@ DELIMITER ;;
 	IF (NEW.students_id <= 0) THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid data at students_id';
 	END IF;
-	IF (NEW.mobility_semester IN ('PWinter', 'Spring')) THEN
+	IF (NEW.mobility_semester NOT IN ('Winter', 'Spring')) THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid data at mobility_semester';
-	END IF; 
+	END IF;
+    IF (NEW.cv NOT LIKE ("%.pdf") )THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid CV file format, insert pdf';
+	END IF;
+    IF (NEW.ToR NOT LIKE ("%.pdf") )THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid ToR file format, insert pdf';
+	END IF;
+    IF (NEW.Motivational_letter NOT LIKE ("%.pdf") )THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid Motivational_letter file format, insert pdf';
+	END IF;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -211,16 +235,19 @@ UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET character_set_client  = utf8mb3 */ ;
+/*!50003 SET character_set_results = utf8mb3 */ ;
+/*!50003 SET collation_connection  = utf8mb3_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `auth_ects_coordinators_BEFORE_INSERT` BEFORE INSERT ON `auth_ects_coordinators` FOR EACH ROW BEGIN
 	IF (NEW.email NOT LIKE '%auth.gr') THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid data at  email, it should be the academic email';
 	END IF; 
+    IF (NEW.phone NOT LIKE ("00%") )THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid phone number, add country code';
+	END IF;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -230,16 +257,19 @@ DELIMITER ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET character_set_client  = utf8mb3 */ ;
+/*!50003 SET character_set_results = utf8mb3 */ ;
+/*!50003 SET collation_connection  = utf8mb3_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `auth_ects_coordinators_BEFORE_UPDATE` BEFORE UPDATE ON `auth_ects_coordinators` FOR EACH ROW BEGIN
 	IF (NEW.email NOT LIKE '%auth.gr') THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid data at email, it should be the academic email';
 	END IF; 
+    IF (NEW.phone NOT LIKE ("00%") )THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid phone number, add country code';
+	END IF;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -302,6 +332,44 @@ LOCK TABLES `erasmus_offices` WRITE;
 INSERT INTO `erasmus_offices` VALUES ('franceeras@france.fr','Jean Rochefort','00338432156847','FR PARIS 1'),('germanyeras@france.fr','Daniel Brühl','00338432156890','FR PARIS 1'),('italyeras@italy.it','Giancarlo Giannini','03915300742890','I NAPLES 2'),('pollanderas@polland.pl','Dagmara Domińczyk','00486909000101','PL KRAKOW 1'),('porteras@portugal.pt','Nuno Lopes','03514788531564','P PORTO 1'),('romaeras@italy.it','Giancarlo Giannini','03985461685364','I  ROMA  1'),('spaineras@spain.es','Ester Expósito Gayoso','00346578423215','ES MADRID 1'),('sweedwneras@france.fr','Linda Källgren','00338409056847','FR PARIS 1');
 /*!40000 ALTER TABLE `erasmus_offices` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb3 */ ;
+/*!50003 SET character_set_results = utf8mb3 */ ;
+/*!50003 SET collation_connection  = utf8mb3_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `erasmus_offices_BEFORE_INSERT` BEFORE INSERT ON `erasmus_offices` FOR EACH ROW BEGIN
+	IF (NEW.phone_number NOT LIKE ("00%") )THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid phone number, add country code';
+	END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb3 */ ;
+/*!50003 SET character_set_results = utf8mb3 */ ;
+/*!50003 SET collation_connection  = utf8mb3_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `erasmus_offices_BEFORE_UPDATE` BEFORE UPDATE ON `erasmus_offices` FOR EACH ROW BEGIN
+		IF (NEW.phone_number NOT LIKE ("00%") )THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid phone number, add country code';
+	END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Temporary view structure for view `la_infos`
@@ -354,11 +422,11 @@ UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET character_set_client  = utf8mb3 */ ;
+/*!50003 SET character_set_results = utf8mb3 */ ;
+/*!50003 SET collation_connection  = utf8mb3_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `learning_agreements_BEFORE_INSERT` BEFORE INSERT ON `learning_agreements` FOR EACH ROW BEGIN
 	IF (NEW.email_auth_ects_coordinators NOT LIKE '%auth.gr') THEN
@@ -370,8 +438,8 @@ DELIMITER ;;
 	IF (NEW.la_no <= 0) THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid data at la_no';
 	END IF;
-    	IF (NEW.status IN ('Pending', 'Submitted', 'Signed_by_AUTH', 'Approved')) THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid data at type';
+	IF (NEW.status NOT IN ('Pending', 'Submitted', 'Signed_by_AUTH', 'Approved')) THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid data at status';
 	END IF; 
 END */;;
 DELIMITER ;
@@ -382,11 +450,11 @@ DELIMITER ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET character_set_client  = utf8mb3 */ ;
+/*!50003 SET character_set_results = utf8mb3 */ ;
+/*!50003 SET collation_connection  = utf8mb3_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `learning_agreements_BEFORE_UPDATE` BEFORE UPDATE ON `learning_agreements` FOR EACH ROW BEGIN
 	IF (NEW.email_auth_ects_coordinators NOT LIKE '%auth.gr') THEN
@@ -398,8 +466,8 @@ DELIMITER ;;
 	IF (NEW.la_no <= 0) THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid data at la_no';
 	END IF;
-    	IF (NEW.status IN ('Pending', 'Submitted', 'Signed_by_AUTH', 'Approved')) THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid data at type';
+    	IF (NEW.status NOT IN ('Pending', 'Submitted', 'Signed_by_AUTH', 'Approved')) THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid data at status';
 	END IF; 
 END */;;
 DELIMITER ;
@@ -437,6 +505,44 @@ LOCK TABLES `learning_agreements_has_subjects` WRITE;
 INSERT INTO `learning_agreements_has_subjects` VALUES (9039,'electrical engineering','P PORTO 1','934'),(449090,'medicine','P AVEIRO 1','37396'),(495090,'electrical engineering','P PORTO 1','748'),(938494,'electrical engineering','P PORTO 1','748'),(1685135,'computer science','P AVEIRO 1','167'),(1685135,'electrical engineering','P PORTO 1','662'),(2930484,'electrical engineering','P PORTO 1','662'),(4564565,'electrical engineering','P PORTO 1','662'),(6846615,'medicine','P AVEIRO 1','98'),(7830329,'medicine','P AVEIRO 1','98');
 /*!40000 ALTER TABLE `learning_agreements_has_subjects` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb3 */ ;
+/*!50003 SET character_set_results = utf8mb3 */ ;
+/*!50003 SET collation_connection  = utf8mb3_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `learning_agreements_has_subjects_BEFORE_INSERT` BEFORE INSERT ON `learning_agreements_has_subjects` FOR EACH ROW BEGIN
+	IF (NEW.Learning_Agreements_la_no <= 0) THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid data at Learning_Agreements_la_no';
+	END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb3 */ ;
+/*!50003 SET character_set_results = utf8mb3 */ ;
+/*!50003 SET collation_connection  = utf8mb3_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `learning_agreements_has_subjects_BEFORE_UPDATE` BEFORE UPDATE ON `learning_agreements_has_subjects` FOR EACH ROW BEGIN
+	IF (NEW.Learning_Agreements_la_no <= 0) THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid data at Learning_Agreements_la_no';
+	END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `receiving_institutions`
@@ -563,11 +669,11 @@ UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET character_set_client  = utf8mb3 */ ;
+/*!50003 SET character_set_results = utf8mb3 */ ;
+/*!50003 SET collation_connection  = utf8mb3_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `students_BEFORE_INSERT` BEFORE INSERT ON `students` FOR EACH ROW BEGIN
 	IF (NEW.semester < 4) THEN
@@ -579,6 +685,9 @@ DELIMITER ;;
 	IF (NEW.id <= 0) THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid data at id';
 	END IF;
+    IF (NEW.phone_number NOT LIKE ("00%") )THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid phone number, add country code';
+	END IF;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -588,11 +697,11 @@ DELIMITER ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET character_set_client  = utf8mb3 */ ;
+/*!50003 SET character_set_results = utf8mb3 */ ;
+/*!50003 SET collation_connection  = utf8mb3_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `students_BEFORE_UPDATE` BEFORE UPDATE ON `students` FOR EACH ROW BEGIN
 	IF (NEW.semester < 4) THEN
@@ -603,6 +712,9 @@ DELIMITER ;;
 	END IF; 
 	IF (NEW.id <= 0) THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid data at id';
+	END IF;
+    IF (NEW.phone_number NOT LIKE ("00%") )THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'invalid phone number, add country code';
 	END IF;
 END */;;
 DELIMITER ;
@@ -717,14 +829,6 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = @saved_cs_client;
 
 --
--- Dumping events for database 'erasmusdb'
---
-
---
--- Dumping routines for database 'erasmusdb'
---
-
---
 -- Final view structure for view `la_infos`
 --
 
@@ -787,4 +891,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-12 22:38:23
+-- Dump completed on 2022-12-13 23:02:29

@@ -1,0 +1,1 @@
+INSERT INTO `accommodation` VALUES (10,-100,'Private_Room','Victoria 8','Madrid',28012,'www.vict8ap.es','0002359868754')

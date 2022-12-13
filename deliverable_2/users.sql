@@ -1,7 +1,7 @@
 #Create user admin_auth_erasmus_office with passwrod supperpass as the admin of the database with all the privilages 
 #only when he is connetcted to the database locally
 CREATE USER 'admin_auth_erasmus_office'@'localhost' IDENTIFIED BY 'superpass'; 
-GRANT ALL PRIVILEGES ON student.* TO 'sadmin'@'localhost';
+GRANT ALL PRIVILEGES ON erasmusdb.* TO 'admin'@'localhost';
 
 #CREATE TEMPORARY TABLE A
 #SELECT*
