@@ -1,6 +1,7 @@
 # DB_project
 
-This project is about the design of a Data Base
+This project is about the design of a Data Base.
+Winter Semester 2022-2023 Aristotle University of Thessaloniki.
 
 Contributors:
 
